@@ -1,4 +1,4 @@
-# gover
+# gover [![Go Reference](https://pkg.go.dev/badge/golang.org/x/example.svg)](https://pkg.go.dev/github.com/vanillaiice/gover) [![Go Report Card](https://goreportcard.com/badge/github.com/vanillaiice/gover)](https://goreportcard.com/report/github.com/vanillaiice/gover)
 
 gover is package version management tool for Go projects.
 
