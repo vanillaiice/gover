@@ -68,7 +68,7 @@ var initCmd = &cli.Command{
 			return err
 		}
 
-		versionData := load.VersionData{Version: version.String()}
+		versionData := load.VersionData{Version: "v" + version.String()}
 
 		data, err := json.MarshalIndent(versionData, "", "  ")
 		if err != nil {

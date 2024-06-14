@@ -79,7 +79,7 @@ var bumpCmd = &cli.Command{
 			return fmt.Errorf("no version bump specified")
 		}
 
-		versionData.Version = version.String()
+		versionData.Version = "v" + version.String()
 		data, err := json.MarshalIndent(versionData, "", "  ")
 		if err != nil {
 			return

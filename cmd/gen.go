@@ -42,7 +42,7 @@ var genCmd = &cli.Command{
 			return err
 		}
 
-		if err = gen.VersionFile(ctx.String("package"), versionData.Version, ctx.Path("output")); err != nil {
+		if err = gen.VersionFile(ctx.String("package"), "v"+versionData.Version, ctx.Path("output")); err != nil {
 			return err
 		}
 
