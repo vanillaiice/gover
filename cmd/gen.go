@@ -8,6 +8,7 @@ import (
 	"github.com/vanillaiice/gover/load"
 )
 
+// genCmd is the gen command.
 var genCmd = &cli.Command{
 	Name:    "gen",
 	Aliases: []string{"g"},

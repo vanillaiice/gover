@@ -8,6 +8,7 @@ import (
 	"github.com/vanillaiice/gover/load"
 )
 
+// tagCmd is the tag command.
 var tagCmd = &cli.Command{
 	Name:    "tag",
 	Aliases: []string{"t"},

@@ -12,6 +12,7 @@ import (
 	"github.com/vanillaiice/gover/load"
 )
 
+// initCmd is the init command.
 var initCmd = &cli.Command{
 	Name:    "init",
 	Usage:   "initialize a new version file",
