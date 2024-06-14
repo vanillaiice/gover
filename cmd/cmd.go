@@ -34,7 +34,7 @@ func Exec() {
 		},
 	}
 
-	godotenv.Load() //nolint:errcheck
+	godotenv.Load(".env", ".gover") //nolint:errcheck
 
 	if err := app.Run(os.Args); err != nil {
 		log.Fatal(err)

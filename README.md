@@ -72,6 +72,8 @@ OUTPUT_FILE=cmd/version.go
 PACKAGE_NAME=cmd
 ```
 
+> these values can be defined in a file named `.env` or `.gover`.
+
 # Help
 
 ```sh
