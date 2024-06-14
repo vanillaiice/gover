@@ -34,9 +34,7 @@ func Exec() {
 		},
 	}
 
-	if err := godotenv.Load(); err != nil {
-		log.Fatal(err)
-	}
+	godotenv.Load() //nolint:errcheck
 
 	if err := app.Run(os.Args); err != nil {
 		log.Fatal(err)
