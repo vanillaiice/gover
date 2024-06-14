@@ -19,6 +19,7 @@ var tagCmd = &cli.Command{
 			Aliases: []string{"f"},
 			Usage:   "load version from `FILE`",
 			Value:   "gover.json",
+			EnvVars: []string{"VERSION_FILE"},
 		},
 	},
 	Action: func(ctx *cli.Context) (err error) {

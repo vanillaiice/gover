@@ -21,20 +21,23 @@ var initCmd = &cli.Command{
 		&cli.PathFlag{
 			Name:    "file",
 			Aliases: []string{"f"},
-			Usage:   "write version to json `FILE`",
+			Usage:   "load version from `FILE`",
 			Value:   "gover.json",
+			EnvVars: []string{"VERSION_FILE"},
 		},
 		&cli.PathFlag{
 			Name:    "output",
 			Aliases: []string{"o"},
-			Usage:   "write version to Go `FILE`",
+			Usage:   "write version to `FILE`",
 			Value:   "version.go",
+			EnvVars: []string{"OUTPUT_FILE"},
 		},
 		&cli.StringFlag{
 			Name:    "package",
 			Aliases: []string{"P"},
 			Usage:   "set package name to `PACKAGE`",
 			Value:   "main",
+			EnvVars: []string{"PACKAGE_NAME"},
 		},
 		&cli.BoolFlag{
 			Name:    "force",

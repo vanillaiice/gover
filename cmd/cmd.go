@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/urfave/cli/v2"
 )
 
@@ -31,6 +32,10 @@ func Exec() {
 				Value:   false,
 			},
 		},
+	}
+
+	if err := godotenv.Load(); err != nil {
+		log.Fatal(err)
 	}
 
 	if err := app.Run(os.Args); err != nil {

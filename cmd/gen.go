@@ -19,18 +19,21 @@ var genCmd = &cli.Command{
 			Aliases: []string{"f"},
 			Usage:   "load version from `FILE`",
 			Value:   "gover.json",
+			EnvVars: []string{"VERSION_FILE"},
 		},
 		&cli.PathFlag{
 			Name:    "output",
 			Aliases: []string{"o"},
 			Usage:   "write version to `FILE`",
 			Value:   "version.go",
+			EnvVars: []string{"OUTPUT_FILE"},
 		},
 		&cli.StringFlag{
 			Name:    "package",
 			Aliases: []string{"P"},
 			Usage:   "set package name to `PACKAGE`",
 			Value:   "main",
+			EnvVars: []string{"PACKAGE_NAME"},
 		},
 	},
 	Action: func(ctx *cli.Context) error {
