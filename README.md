@@ -64,6 +64,14 @@ $ gover -V bump --minor -o ver.go
 $ gover bump --patch -P pkg
 ```
 
+On a side note, you can also use environment variables to define the package name, version file, and output file:
+
+```sh
+VERSION_FILE=gover.json
+OUTPUT_FILE=cmd/version.go
+PACKAGE_NAME=cmd
+```
+
 # Help
 
 ```sh
