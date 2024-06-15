@@ -23,6 +23,7 @@ func Exec() {
 			genCmd,
 			bumpCmd,
 			tagCmd,
+			getCmd,
 		},
 		Flags: []cli.Flag{
 			&cli.BoolFlag{
