@@ -78,13 +78,13 @@ PACKAGE_NAME=cmd
 
 ```sh
 NAME:
-   gover - package version management tool for Go
+   gover - package version management tool for Go projects
 
 USAGE:
-   gover [global options] command [command options]
+   gover [global options] command [command options] 
 
 VERSION:
-   1.0.0
+   1.5.0
 
 AUTHOR:
    vanillaiice <vanillaiice1@proton.me>
@@ -94,6 +94,7 @@ COMMANDS:
    gen, g   generate go version file from json version file
    bump, b  bump version
    tag, t   tag git branch with the current version
+   get, e   get the current version
    help, h  Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
