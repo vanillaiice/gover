@@ -8,8 +8,11 @@ import (
 // perm is the file permission used for writing.
 const perm = 0644
 
-// tmplFile is the template file.
-const tmplFile = "version.tmpl"
+// tmpl is the template for the Go version file.
+const tmpl = `package {{.PackageName}}
+
+// version is the current version of the package.
+const version = "{{.Version}}"`
 
 // TemplateData	is the template data.
 type TemplateData struct {
@@ -19,7 +22,7 @@ type TemplateData struct {
 
 // VersionFile generates a file containing the package version.
 func VersionFile(packageName, version, outputFile string) (err error) {
-	tmpl, err := template.New(tmplFile).ParseFiles(tmplFile)
+	tmpl, err := template.New("tmpl").Parse(tmpl)
 	if err != nil {
 		return err
 	}

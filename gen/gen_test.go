@@ -13,7 +13,7 @@ func TestVersionFile(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	want := "package gover\n\n// version is the current version of the package.\nconst version = \"6.9.420\"\n"
+	want := "package gover\n\n// version is the current version of the package.\nconst version = \"6.9.420\""
 
 	if content, err := os.ReadFile("version.go"); err != nil {
 		t.Fatal(err)
