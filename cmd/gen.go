@@ -25,15 +25,21 @@ var genCmd = &cli.Command{
 			Name:    "output",
 			Aliases: []string{"o"},
 			Usage:   "write version to `FILE`",
-			Value:   "version.go",
+			Value:   "version/version.go",
 			EnvVars: []string{"OUTPUT_FILE"},
 		},
 		&cli.StringFlag{
 			Name:    "package",
 			Aliases: []string{"P"},
 			Usage:   "set package name to `PACKAGE`",
-			Value:   "main",
+			Value:   "version",
 			EnvVars: []string{"PACKAGE_NAME"},
+		},
+		&cli.BoolFlag{
+			Name:    "local",
+			Aliases: []string{"l"},
+			Usage:   "make the version constant local",
+			Value:   false,
 		},
 	},
 	Action: func(ctx *cli.Context) error {
@@ -42,7 +48,7 @@ var genCmd = &cli.Command{
 			return err
 		}
 
-		if err = gen.VersionFile(ctx.String("package"), "v"+versionData.Version, ctx.Path("output")); err != nil {
+		if err = gen.VersionFile(ctx.String("package"), "v"+versionData.Version, ctx.Bool("local"), ctx.Path("output")); err != nil {
 			return err
 		}
 

@@ -32,15 +32,21 @@ var bumpCmd = &cli.Command{
 			Name:    "output",
 			Aliases: []string{"o"},
 			Usage:   "write version to `FILE`",
-			Value:   "version.go",
+			Value:   "version/version.go",
 			EnvVars: []string{"OUTPUT_FILE"},
 		},
 		&cli.StringFlag{
 			Name:    "package",
 			Aliases: []string{"P"},
 			Usage:   "set package name to `PACKAGE`",
-			Value:   "main",
+			Value:   "version",
 			EnvVars: []string{"PACKAGE_NAME"},
+		},
+		&cli.BoolFlag{
+			Name:    "local",
+			Aliases: []string{"l"},
+			Usage:   "make the version constant local",
+			Value:   false,
 		},
 		&cli.BoolFlag{
 			Name:    "major",
@@ -66,7 +72,7 @@ var bumpCmd = &cli.Command{
 
 		version, err := semver.NewVersion(versionData.Version)
 		if err != nil {
-			return err
+			return
 		}
 
 		if ctx.Bool("major") {
@@ -86,11 +92,11 @@ var bumpCmd = &cli.Command{
 		}
 
 		if err = os.WriteFile(ctx.Path("file"), data, perm); err != nil {
-			return err
+			return
 		}
 
-		if err = gen.VersionFile(ctx.String("package"), version.String(), ctx.Path("output")); err != nil {
-			return err
+		if err = gen.VersionFile(ctx.String("package"), version.String(), ctx.Bool("local"), ctx.Path("output")); err != nil {
+			return
 		}
 
 		if ctx.Bool("verbose") {

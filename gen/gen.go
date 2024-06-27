@@ -5,36 +5,35 @@ import (
 	"text/template"
 )
 
-// perm is the file permission used for writing.
-const perm = 0644
-
 // tmpl is the template for the Go version file.
-const tmpl = `package {{.PackageName}}
+const tmpl = `package {{ .PackageName }}
 
-// version is the current version of the package.
-const version = "{{.Version}}"`
+// {{if .Local }}version{{ else }}Version{{ end }} is the current version of the package.
+{{ if .Local }}const version = "{{ .Version }}"{{ else }}const Version = "{{ .Version }}"{{ end }}`
 
 // TemplateData	is the template data.
 type TemplateData struct {
 	PackageName string
 	Version     string
+	Local       bool
 }
 
 // VersionFile generates a file containing the package version.
-func VersionFile(packageName, version, outputFile string) (err error) {
+func VersionFile(packageName, version string, local bool, outputFile string) (err error) {
 	tmpl, err := template.New("tmpl").Parse(tmpl)
 	if err != nil {
-		return err
+		return
 	}
 
 	f, err := os.Create(outputFile)
 	if err != nil {
-		return err
+		return
 	}
 	defer f.Close()
 
 	return tmpl.Execute(f, TemplateData{
 		PackageName: packageName,
 		Version:     version,
+		Local:       local,
 	})
 }

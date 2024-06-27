@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/urfave/cli/v2"
@@ -29,15 +30,21 @@ var initCmd = &cli.Command{
 			Name:    "output",
 			Aliases: []string{"o"},
 			Usage:   "write version to `FILE`",
-			Value:   "version.go",
+			Value:   "version/version.go",
 			EnvVars: []string{"OUTPUT_FILE"},
 		},
 		&cli.StringFlag{
 			Name:    "package",
 			Aliases: []string{"P"},
 			Usage:   "set package name to `PACKAGE`",
-			Value:   "main",
+			Value:   "version",
 			EnvVars: []string{"PACKAGE_NAME"},
+		},
+		&cli.BoolFlag{
+			Name:    "local",
+			Aliases: []string{"l"},
+			Usage:   "make the version constant local",
+			Value:   false,
 		},
 		&cli.BoolFlag{
 			Name:    "force",
@@ -79,7 +86,12 @@ var initCmd = &cli.Command{
 			return err
 		}
 
-		if err = gen.VersionFile(ctx.String("package"), version.String(), ctx.Path("output")); err != nil {
+		path := filepath.Dir(ctx.Path("output"))
+		if err = os.MkdirAll(path, os.ModePerm); err != nil {
+			return err
+		}
+
+		if err = gen.VersionFile(ctx.String("package"), version.String(), ctx.Bool("local"), ctx.Path("output")); err != nil {
 			return err
 		}
 

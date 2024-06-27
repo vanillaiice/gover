@@ -6,6 +6,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/urfave/cli/v2"
+	"github.com/vanillaiice/gover/version"
 )
 
 // Exec starts the cli app.
@@ -13,7 +14,7 @@ func Exec() {
 	app := &cli.App{
 		Name:                   "gover",
 		Usage:                  "package version management tool for Go projects",
-		Version:                version,
+		Version:                version.Version,
 		Suggest:                true,
 		UseShortOptionHandling: true,
 		EnableBashCompletion:   true,
