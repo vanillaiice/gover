@@ -43,7 +43,7 @@ var initCmd = &cli.Command{
 		&cli.BoolFlag{
 			Name:    "local",
 			Aliases: []string{"l"},
-			Usage:   "make the version constant local",
+			Usage:   "make the version constant local (version instead of Version)",
 			Value:   false,
 		},
 		&cli.BoolFlag{
