@@ -1,27 +1,29 @@
 package cmd
 
 import (
-	"html/template"
 	"strings"
+	"text/template"
 
 	"github.com/urfave/cli/v2"
 	"github.com/vanillaiice/gover/load"
 )
 
-// tagCmdTemplateData	is the template data for the tag command.
-type tagCmdTemplateData struct {
+// commitCmdTemplateData is the template data for the commit command.
+type commitCmdTemplateData struct {
+	File    string
 	Version string
 }
 
-// generateTagCommand generates the tag command from the template.
-func generateTagCommand(tmpl, version string) (string, error) {
+// generateCommitCommand generates the commit command from the template.
+func generateCommitCommand(tmpl, file, version string) (string, error) {
 	template, err := template.New("tmpl").Parse(tmpl)
 	if err != nil {
 		return "", err
 	}
 
 	var b strings.Builder
-	if err = template.Execute(&b, tagCmdTemplateData{
+	if err = template.Execute(&b, commitCmdTemplateData{
+		File:    file,
 		Version: version,
 	}); err != nil {
 		return "", err
@@ -30,11 +32,11 @@ func generateTagCommand(tmpl, version string) (string, error) {
 	return b.String(), nil
 }
 
-// tagCmd is the tag command.
-var tagCmd = &cli.Command{
-	Name:    "tag",
-	Aliases: []string{"t"},
-	Usage:   "tag branch with the current version",
+// commitCmd is the commit command.
+var commitCmd = &cli.Command{
+	Name:    "commit",
+	Aliases: []string{"c"},
+	Usage:   "commit version",
 	Flags: []cli.Flag{
 		&cli.PathFlag{
 			Name:    "file",
@@ -46,20 +48,20 @@ var tagCmd = &cli.Command{
 		&cli.StringFlag{
 			Name:    "command",
 			Aliases: []string{"c"},
-			Usage:   "template for tag `COMMAND`",
-			Value:   "git tag {{ .Version }}",
-			EnvVars: []string{"TAG_COMMAND"},
+			Usage:   "template for commit `COMMAND`",
+			Value:   "git commit {{ .File }} -m \"chore: bump version to {{ .Version }}\"",
+			EnvVars: []string{"COMMIT_COMMAND"},
 		},
 	},
 	Action: func(ctx *cli.Context) (err error) {
 		versionData, err := load.FromFile(ctx.Path("file"))
 		if err != nil {
-			return
+			return err
 		}
 
-		command, err := generateTagCommand(ctx.String("command"), versionData.Version)
+		command, err := generateCommitCommand(ctx.String("command"), ctx.Path("file"), versionData.Version)
 		if err != nil {
-			return
+			return err
 		}
 
 		if err = runCommand(command); err != nil {
