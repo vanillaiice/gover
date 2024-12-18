@@ -1,2 +1,3 @@
 VERSION_FILE=cmd/version.go
 PACKAGE_NAME=cmd
+LOCAL_VERSION=true
