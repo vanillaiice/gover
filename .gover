@@ -1,3 +1,2 @@
-VERSION_FILE=gover.json
-OUTPUT_FILE=cmd/version.go
+VERSION_FILE=cmd/version.go
 PACKAGE_NAME=cmd
