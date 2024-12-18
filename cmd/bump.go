@@ -95,7 +95,7 @@ var bumpCmd = &cli.Command{
 			return
 		}
 
-		if err = gen.VersionFile(ctx.String("package"), version.String(), ctx.Bool("local"), ctx.Path("output")); err != nil {
+		if err = gen.VersionFile(ctx.String("package"), versionData.Version, ctx.Bool("local"), ctx.Path("output")); err != nil {
 			return
 		}
 
