@@ -21,7 +21,6 @@ func Exec() {
 		Authors:                []*cli.Author{{Name: "vanillaiice", Email: "vanillaiice1@proton.me"}},
 		Commands: []*cli.Command{
 			initCmd,
-			genCmd,
 			bumpCmd,
 			commitCmd,
 			tagCmd,
