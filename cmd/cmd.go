@@ -23,6 +23,7 @@ func Exec() {
 			initCmd,
 			genCmd,
 			bumpCmd,
+			commitCmd,
 			tagCmd,
 			getCmd,
 		},
