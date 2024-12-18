@@ -73,7 +73,7 @@ You can commit the Go version file using the `commit` command:
 # commit using default git template
 $ gover commit
 # commit with custom template and Go version file
-$ gover -f cmd/ver.go commit --command "git commit {{ .File }} -m 'bump to {{ .Version }}'"
+$ gover commit -f cmd/ver.go --command "git commit {{ .File }} -m 'bump to {{ .Version }}'"
 ```
 
 ## `tag`
