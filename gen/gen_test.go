@@ -8,33 +8,37 @@ import (
 )
 
 func TestVersionFile(t *testing.T) {
-	err := gen.VersionFile("gover", "6.9.420", true, "version.go")
+	const version = "6.9.420"
+	const versionFileName = "version.go"
+	const packageName = "gover"
+
+	err := gen.VersionFile(packageName, version, true, versionFileName)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	want := "package gover\n\n// version is the current version of the package.\nconst version = \"6.9.420\""
 
-	if content, err := os.ReadFile("version.go"); err != nil {
+	if content, err := os.ReadFile(versionFileName); err != nil {
 		t.Fatal(err)
 	} else if string(content) != want {
 		t.Errorf("got %q, want %q", string(content), want)
 	}
 
-	err = gen.VersionFile("gover", "6.9.420", false, "version.go")
+	err = gen.VersionFile(packageName, version, false, versionFileName)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	want = "package gover\n\n// Version is the current version of the package.\nconst Version = \"6.9.420\""
 
-	if content, err := os.ReadFile("version.go"); err != nil {
+	if content, err := os.ReadFile(versionFileName); err != nil {
 		t.Fatal(err)
 	} else if string(content) != want {
 		t.Errorf("got %q, want %q", string(content), want)
 	}
 
-	if err = os.Remove("version.go"); err != nil {
+	if err = os.Remove(versionFileName); err != nil {
 		panic(err)
 	}
 }

@@ -42,15 +42,8 @@ var commitCmd = &cli.Command{
 			Name:    "file",
 			Aliases: []string{"f"},
 			Usage:   "load version from `FILE`",
-			Value:   "gover.json",
-			EnvVars: []string{"VERSION_FILE"},
-		},
-		&cli.PathFlag{
-			Name:    "output",
-			Aliases: []string{"o"},
-			Usage:   "commit Go output file `FILE`",
 			Value:   "version/version.go",
-			EnvVars: []string{"OUTPUT_FILE"},
+			EnvVars: []string{"VERSION_FILE"},
 		},
 		&cli.StringFlag{
 			Name:    "command",
@@ -66,15 +59,13 @@ var commitCmd = &cli.Command{
 			return err
 		}
 
-		for _, file := range []string{ctx.Path("file"), ctx.Path("output")} {
-			command, err := generateCommitCommand(ctx.String("command"), file, versionData.Version)
-			if err != nil {
-				return err
-			}
+		command, err := generateCommitCommand(ctx.String("command"), ctx.Path("file"), versionData.Version)
+		if err != nil {
+			return err
+		}
 
-			if err = runCommand(command); err != nil {
-				return err
-			}
+		if err = runCommand(command); err != nil {
+			return err
 		}
 
 		return nil

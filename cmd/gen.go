@@ -18,15 +18,8 @@ var genCmd = &cli.Command{
 			Name:    "file",
 			Aliases: []string{"f"},
 			Usage:   "load version from `FILE`",
-			Value:   "gover.json",
-			EnvVars: []string{"VERSION_FILE"},
-		},
-		&cli.PathFlag{
-			Name:    "output",
-			Aliases: []string{"o"},
-			Usage:   "write version to `FILE`",
 			Value:   "version/version.go",
-			EnvVars: []string{"OUTPUT_FILE"},
+			EnvVars: []string{"VERSION_FILE"},
 		},
 		&cli.StringFlag{
 			Name:    "package",
@@ -48,7 +41,7 @@ var genCmd = &cli.Command{
 			return err
 		}
 
-		if err = gen.VersionFile(ctx.String("package"), "v"+versionData.Version, ctx.Bool("local"), ctx.Path("output")); err != nil {
+		if err = gen.VersionFile(ctx.String("package"), "v"+versionData.Version, ctx.Bool("local"), ctx.Path("file")); err != nil {
 			return err
 		}
 

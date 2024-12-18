@@ -1,10 +1,8 @@
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/urfave/cli/v2"
@@ -25,15 +23,8 @@ var bumpCmd = &cli.Command{
 			Name:    "file",
 			Aliases: []string{"f"},
 			Usage:   "load version from `FILE`",
-			Value:   "gover.json",
-			EnvVars: []string{"VERSION_FILE"},
-		},
-		&cli.PathFlag{
-			Name:    "output",
-			Aliases: []string{"o"},
-			Usage:   "write version to `FILE`",
 			Value:   "version/version.go",
-			EnvVars: []string{"OUTPUT_FILE"},
+			EnvVars: []string{"VERSION_FILE"},
 		},
 		&cli.StringFlag{
 			Name:    "package",
@@ -47,6 +38,7 @@ var bumpCmd = &cli.Command{
 			Aliases: []string{"l"},
 			Usage:   "make the version constant local",
 			Value:   false,
+			EnvVars: []string{"LOCAL_VERSION"},
 		},
 		&cli.BoolFlag{
 			Name:    "major",
@@ -75,27 +67,19 @@ var bumpCmd = &cli.Command{
 			return
 		}
 
-		if ctx.Bool("major") {
+		switch {
+		case ctx.Bool("major"):
 			*version = version.IncMajor()
-		} else if ctx.Bool("minor") {
+		case ctx.Bool("minor"):
 			*version = version.IncMinor()
-		} else if ctx.Bool("patch") {
+		case ctx.Bool("patch"):
 			*version = version.IncPatch()
-		} else {
+		default:
 			return fmt.Errorf("no version bump specified")
 		}
 
 		versionData.Version = "v" + version.String()
-		data, err := json.MarshalIndent(versionData, "", "  ")
-		if err != nil {
-			return
-		}
-
-		if err = os.WriteFile(ctx.Path("file"), data, perm); err != nil {
-			return
-		}
-
-		if err = gen.VersionFile(ctx.String("package"), versionData.Version, ctx.Bool("local"), ctx.Path("output")); err != nil {
+		if err = gen.VersionFile(ctx.String("package"), versionData.Version, ctx.Bool("local"), ctx.Path("file")); err != nil {
 			return
 		}
 

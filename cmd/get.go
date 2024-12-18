@@ -16,7 +16,7 @@ var getCmd = &cli.Command{
 			Name:    "file",
 			Aliases: []string{"f"},
 			Usage:   "load version from `FILE`",
-			Value:   "gover.json",
+			Value:   "version/version.go",
 			EnvVars: []string{"VERSION_FILE"},
 		},
 	},
