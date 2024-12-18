@@ -2,14 +2,13 @@
 
 gover is package version management tool for Go projects.
 
-Instead of manually incrementing the version number in your code (🗿),
+Instead of manually incrementing the version number in your code like a - 🗿,
 you can simply use `gover` to automatically do it.
-Also, you can use `gover` to tag the git branch to the current version of your project (using `git tag`).
+Also, you can use `gover` to commit changes to your go version file,
+and tag branches.
 
-Under the hood, `gover` will read a `gover.json` file in your project
+Under the hood, `gover` will read a Go version file (e.g. `version.go`) in your project
 and update the version number accordingly.
-It will also generate a `version.go` file that contains the current version number,
-which you can import in your project.
 
 # Installation
 
@@ -22,11 +21,11 @@ $ go install github.com/vanillaiice/gover@latest
 In your Go project, use `gover init` to initialize the version file:
 
 ```sh
-# create a gover.json & version.go with a default version of v0.0.1
+# create a Go version file with a default version of v0.0.1
 $ gover init
-# create a version.json with a version of v1.0.0
-$ gover init -v v1.0.0 -f version.json
-# create a gover.json with a version of v1.0.0, custom path for the Go output file,
+# create a Go version file with a version of v1.0.0
+$ gover init -v v1.0.0
+# create a custom Go version file with a version of v1.0.0,
 # and a custom package name
 $ gover init -v v1.0.0 -o cmd/version.go -P cmd
 ```
@@ -53,24 +52,55 @@ func Exec() {
 
 > here, the `version.go` file is in the `cmd` directory.
 
-Finally, you can use `gover bump` to increment the version number:
+## `bump`
 
-```
+You can increment the verison on the Go version file using the `bump` command:
+
+```sh
 # bump to major version (e.g. v1.0.0 -> v2.0.0)
 $ gover bump --major
-# bump to minor version (e.g. v1.0.0 -> v1.1.0) with verbose log and custom output file
-$ gover -V bump --minor -o ver.go
+# bump to minor version (e.g. v1.0.0 -> v1.1.0) with verbose log and custom Go version file
+$ gover -V bump --minor -f ver.go
 # bump to patch version (e.g. v1.0.0 -> v1.0.1) with custom package name
 $ gover bump --patch -P pkg
 ```
 
-On a side note, you can also use environment variables to define the package name, version file, and output file:
+## `commit`
+
+You can commit the Go version file using the `commit` command:
 
 ```sh
-VERSION_FILE=gover.json
-OUTPUT_FILE=cmd/version.go
-PACKAGE_NAME=cmd
+# commit using default git template
+$ gover commit
+# commit with custom template and Go version file
+$ gover -f cmd/ver.go commit --command "git commit {{ .File }} -m 'bump to {{ .Version }}'"
 ```
+
+## `tag`
+
+You can tag the current branch using the `tag` command:
+
+```sh
+# tag using default git command ("git tag {{ .Version }}")
+$ gover tag
+```
+
+## `get`
+
+The `get` commands returns the current version of the package:
+
+```sh
+$ gover get
+# with custom file
+$ gover get -f cmd/ver.go
+```
+
+> You can also set some arguments with environment variables:
+
+> - version file: VERSION_FILE
+> - package name: PACKAGE_NAME
+> - commit command: COMMIT_COMMAND
+> - tag command: TAG_COMMAND
 
 > these values can be defined in a file named `.env` or `.gover`.
 
@@ -81,27 +111,31 @@ NAME:
    gover - package version management tool for Go projects
 
 USAGE:
-   gover [global options] command [command options] 
+   gover [global options] command [command options]
 
 VERSION:
-   1.5.0
+   v3.0.0
 
 AUTHOR:
    vanillaiice <vanillaiice1@proton.me>
 
 COMMANDS:
-   init, i  initialize a new version file
-   gen, g   generate go version file from json version file
-   bump, b  bump version
-   tag, t   tag git branch with the current version
-   get, e   get the current version
-   help, h  Shows a list of commands or help for one command
+   init, i    initialize a new version file
+   bump, b    bump version
+   commit, c  commit version
+   tag, t     tag branch with the current version
+   get, e     get the current version
+   help, h    Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
    --verbose, -V  show verbose log (default: false)
    --help, -h     show help
    --version, -v  print the version
 ```
+
+# Related Projects
+
+- [gover-js](https://github.com/vanillaiice/gover-js), a package version management tool for JavaScript projects.
 
 # License
 
