@@ -13,7 +13,7 @@ and update the version number accordingly.
 # Installation
 
 ```sh
-$ go install github.com/vanillaiice/gover@latest
+$ go install github.com/vanillaiice/gover/v3@latest
 ```
 
 # Usage
