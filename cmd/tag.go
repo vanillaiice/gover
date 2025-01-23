@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/urfave/cli/v2"
-	"github.com/vanillaiice/gover/load"
+	"github.com/vanillaiice/gover/v3/load"
 )
 
 // tagCmdTemplateData	is the template data for the tag command.

@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/vanillaiice/gover/gen"
+	"github.com/vanillaiice/gover/v3/gen"
 )
 
 func TestVersionFile(t *testing.T) {

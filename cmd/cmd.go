@@ -6,7 +6,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/urfave/cli/v2"
-	"github.com/vanillaiice/gover/version"
+	"github.com/vanillaiice/gover/v3/version"
 )
 
 // Exec starts the cli app.

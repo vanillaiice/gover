@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/urfave/cli/v2"
-	"github.com/vanillaiice/gover/load"
+	"github.com/vanillaiice/gover/v3/load"
 )
 
 var getCmd = &cli.Command{

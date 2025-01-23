@@ -1,4 +1,4 @@
-module github.com/vanillaiice/gover
+module github.com/vanillaiice/gover/v3
 
 go 1.22.3
 

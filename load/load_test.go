@@ -3,7 +3,7 @@ package load_test
 import (
 	"testing"
 
-	"github.com/vanillaiice/gover/load"
+	"github.com/vanillaiice/gover/v3/load"
 )
 
 var files = [2]string{"version_test_global.go", "version_test_local.go"}

@@ -6,8 +6,8 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/urfave/cli/v2"
-	"github.com/vanillaiice/gover/gen"
-	"github.com/vanillaiice/gover/load"
+	"github.com/vanillaiice/gover/v3/gen"
+	"github.com/vanillaiice/gover/v3/load"
 )
 
 // perm is the file permission.
