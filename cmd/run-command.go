@@ -4,25 +4,22 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"regexp"
+
+	"github.com/mattn/go-shellwords"
 )
 
 // splitCommand splits a command into arguments.
-func splitCommand(command string) []string {
-	re := regexp.MustCompile(`(?:[^\s'"]+|['"][^'"]*['"])`)
-	matches := re.FindAllString(command, -1)
-	for i, match := range matches {
-		if len(match) > 1 && (match[0] == '"' || match[0] == '\'') && match[len(match)-1] == match[0] {
-			matches[i] = match[1 : len(match)-1]
-		}
-	}
-	return matches
+func splitCommand(command string) ([]string, error) {
+	return shellwords.Parse(command)
 }
 
 // runCommand runs a command.
 func runCommand(command string) error {
 	var cmd *exec.Cmd
-	commandParts := splitCommand(command)
+	commandParts, err := splitCommand(command)
+	if err != nil {
+		return err
+	}
 	lenCmdStringParts := len(commandParts)
 	if lenCmdStringParts == 0 {
 		return fmt.Errorf("invalid command: %s", command)
