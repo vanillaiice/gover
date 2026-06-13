@@ -21,13 +21,16 @@ func runCommand(command string) error {
 		return err
 	}
 	lenCmdStringParts := len(commandParts)
-	if lenCmdStringParts == 0 {
+
+	switch lenCmdStringParts {
+	case 0:
 		return fmt.Errorf("invalid command: %s", command)
-	} else if lenCmdStringParts == 1 {
+	case 1:
 		cmd = exec.Command(commandParts[0])
-	} else {
+	default:
 		cmd = exec.Command(commandParts[0], commandParts[1:]...)
 	}
+
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	return cmd.Run()

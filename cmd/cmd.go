@@ -1,16 +1,13 @@
 package cmd
 
 import (
-	"log"
-	"os"
-
 	"github.com/joho/godotenv"
 	"github.com/urfave/cli/v2"
 	"github.com/vanillaiice/gover/v3/version"
 )
 
 // Exec starts the cli app.
-func Exec() {
+func Exec(arguments []string) error {
 	app := &cli.App{
 		Name:                   "gover",
 		Usage:                  "package version management tool for Go projects",
@@ -33,13 +30,20 @@ func Exec() {
 				Usage:   "show verbose log",
 				Value:   false,
 			},
+			/*
+				&cli.PathFlag{
+					Name:    "file",
+					Aliases: []string{"f"},
+					Usage:   "load version from `FILE`",
+					Value:   "version/version.go",
+					EnvVars: []string{"VERSION_FILE"},
+				},
+			*/
 		},
 	}
 
 	_ = godotenv.Load(".env")
 	_ = godotenv.Load(".gover")
 
-	if err := app.Run(os.Args); err != nil {
-		log.Fatal(err)
-	}
+	return app.Run(arguments)
 }

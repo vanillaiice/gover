@@ -19,11 +19,11 @@ var initCmd = &cli.Command{
 	Aliases: []string{"i"},
 	Flags: []cli.Flag{
 		&cli.PathFlag{
-			Name:    "output",
-			Aliases: []string{"o"},
+			Name:    "file",
+			Aliases: []string{"f"},
 			Usage:   "write version to `FILE`",
 			Value:   "version/version.go",
-			EnvVars: []string{"OUTPUT_FILE"},
+			EnvVars: []string{"VERSION_FILE"},
 		},
 		&cli.StringFlag{
 			Name:    "package",
@@ -52,17 +52,17 @@ var initCmd = &cli.Command{
 		},
 	},
 	Action: func(ctx *cli.Context) error {
-		if _, err := os.Stat(ctx.Path("output")); !errors.Is(err, os.ErrNotExist) {
+		if _, err := os.Stat(ctx.Path("file")); !errors.Is(err, os.ErrNotExist) {
 			if err == nil {
 				if !ctx.Bool("force") {
-					return fmt.Errorf("file %s already exists", ctx.Path("output"))
+					return fmt.Errorf("file %s already exists", ctx.Path("file"))
 				}
 			} else {
 				return err
 			}
 		}
 
-		path := filepath.Dir(ctx.Path("output"))
+		path := filepath.Dir(ctx.Path("file"))
 		if err := os.MkdirAll(path, os.ModePerm); err != nil {
 			return err
 		}
@@ -72,12 +72,12 @@ var initCmd = &cli.Command{
 			return err
 		}
 		versionData := load.VersionData{Version: "v" + version.String()}
-		if err = gen.VersionFile(ctx.String("package"), versionData.Version, ctx.Bool("local"), ctx.Path("output")); err != nil {
+		if err = gen.VersionFile(ctx.String("package"), versionData.Version, ctx.Bool("local"), ctx.Path("file")); err != nil {
 			return err
 		}
 
 		if ctx.Bool("verbose") {
-			fmt.Printf("wrote version to %s & generated %s\n", ctx.Path("file"), ctx.Path("output"))
+			fmt.Printf("wrote version to %s & generated %s\n", ctx.Path("file"), ctx.Path("file"))
 		}
 
 		return nil

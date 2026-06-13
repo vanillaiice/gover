@@ -1,7 +1,14 @@
 package main
 
-import "github.com/vanillaiice/gover/v3/cmd"
+import (
+	"log"
+	"os"
+
+	"github.com/vanillaiice/gover/v3/cmd"
+)
 
 func main() {
-	cmd.Exec()
+	if err := cmd.Exec(os.Args); err != nil {
+		log.Fatal(err)
+	}
 }

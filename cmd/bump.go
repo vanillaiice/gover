@@ -10,9 +10,6 @@ import (
 	"github.com/vanillaiice/gover/v3/load"
 )
 
-// perm is the file permission.
-const perm = 0644
-
 // bumpCmd is the bump command.
 var bumpCmd = &cli.Command{
 	Name:    "bump",
