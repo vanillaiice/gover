@@ -37,6 +37,7 @@ var initCmd = &cli.Command{
 			Aliases: []string{"l"},
 			Usage:   "make the version constant local (version instead of Version)",
 			Value:   false,
+			EnvVars: []string{"LOCAL_VERSION"},
 		},
 		&cli.BoolFlag{
 			Name:    "force",
