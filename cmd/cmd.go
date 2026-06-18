@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"fmt"
+	"slices"
+
 	"github.com/joho/godotenv"
 	"github.com/urfave/cli/v2"
 	"github.com/vanillaiice/gover/v3/version"
@@ -10,7 +13,7 @@ import (
 func Exec(arguments []string) error {
 	app := &cli.App{
 		Name:                   "gover",
-		Usage:                  "package version management tool for Go projects",
+		Usage:                  "package version management tool for Go and JS projects",
 		Version:                version.Version,
 		Suggest:                true,
 		UseShortOptionHandling: true,
@@ -30,15 +33,19 @@ func Exec(arguments []string) error {
 				Usage:   "show verbose log",
 				Value:   false,
 			},
-			/*
-				&cli.PathFlag{
-					Name:    "file",
-					Aliases: []string{"f"},
-					Usage:   "load version from `FILE`",
-					Value:   "version/version.go",
-					EnvVars: []string{"VERSION_FILE"},
-				},
-			*/
+			&cli.StringFlag{
+				Name:    "lang",
+				Aliases: []string{"l"},
+				Usage:   "use language `LANG`",
+				Value:   "go",
+				EnvVars: []string{"GOVER_LANG"},
+			},
+		},
+		Before: func(ctx *cli.Context) error {
+			if lang := ctx.String("lang"); !slices.Contains([]string{"go", "js", "ts"}, lang) {
+				return fmt.Errorf("unsupported lang %q", lang)
+			}
+			return nil
 		},
 	}
 

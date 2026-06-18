@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/urfave/cli/v2"
 	"github.com/vanillaiice/gover/v3/gen"
-	"github.com/vanillaiice/gover/v3/load"
+	"github.com/vanillaiice/gover/v3/lang"
 )
 
 // initCmd is the init command.
@@ -42,7 +43,7 @@ var initCmd = &cli.Command{
 		&cli.BoolFlag{
 			Name:    "force",
 			Aliases: []string{"F"},
-			Usage:   "overwrite the go version file if it already exists",
+			Usage:   "overwrite the version file if it already exists",
 			Value:   false,
 		},
 		&cli.StringFlag{
@@ -51,6 +52,12 @@ var initCmd = &cli.Command{
 			Usage:   "set version to `VERSION`",
 			Value:   "0.0.1",
 		},
+	},
+	Before: func(ctx *cli.Context) error {
+		if lang := ctx.String("lang"); slices.Contains([]string{"js", "ts"}, lang) {
+			return errors.New("init should not be called for js projects")
+		}
+		return nil
 	},
 	Action: func(ctx *cli.Context) error {
 		if _, err := os.Stat(ctx.Path("file")); !errors.Is(err, os.ErrNotExist) {
@@ -72,8 +79,28 @@ var initCmd = &cli.Command{
 		if err != nil {
 			return err
 		}
-		versionData := load.VersionData{Version: "v" + version.String()}
-		if err = gen.VersionFile(ctx.String("package"), versionData.Version, ctx.Bool("local"), ctx.Path("file")); err != nil {
+
+		l := lang.Lang(ctx.String("lang"))
+
+		var genOpts gen.Opts
+		switch l {
+		case lang.Go:
+			versionStr := "v" + version.String()
+			genOpts = gen.Opts{
+				PackageName: ctx.String("package"),
+				Local:       ctx.Bool("local"),
+				Version:     versionStr,
+			}
+		default:
+			return fmt.Errorf("init command not supported for lang %q", l)
+		}
+
+		out, err := gen.Version(l, &genOpts)
+		if err != nil {
+			return err
+		}
+
+		if err := os.WriteFile(ctx.Path("file"), out, 0644); err != nil {
 			return err
 		}
 

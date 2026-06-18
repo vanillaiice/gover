@@ -1,39 +1,42 @@
 package gen
 
 import (
-	"os"
-	"text/template"
+	"fmt"
+
+	gen "github.com/vanillaiice/gover/v3/gen/go"
+	genJS "github.com/vanillaiice/gover/v3/gen/js"
+	"github.com/vanillaiice/gover/v3/lang"
 )
 
-// tmpl is the template for the Go version file.
-const tmpl = `package {{ .PackageName }}
-
-// {{if .Local }}version{{ else }}Version{{ end }} is the current version of the package.
-{{ if .Local }}const version = "{{ .Version }}"{{ else }}const Version = "{{ .Version }}"{{ end }}`
-
-// TemplateData	is the template data.
-type TemplateData struct {
+type Opts struct {
+	OutputFile  string
 	PackageName string
 	Version     string
 	Local       bool
 }
 
-// VersionFile generates a file containing the package version.
-func VersionFile(packageName, version string, local bool, outputFile string) (err error) {
-	tmpl, err := template.New("tmpl").Parse(tmpl)
-	if err != nil {
-		return
+// Version generates a version file.
+func Version(l lang.Lang, opts *Opts) ([]byte, error) {
+	var (
+		generated []byte
+		err       error
+	)
+
+	switch l {
+	case lang.Go:
+		generated, err = gen.VersionFile(
+			opts.PackageName,
+			opts.Version,
+			opts.Local,
+		)
+	case lang.JS, lang.TS:
+		generated, err = genJS.UpdatePackageVersion(
+			opts.OutputFile,
+			opts.Version,
+		)
+	default:
+		return []byte{}, fmt.Errorf("unsupported lang %q", l)
 	}
 
-	f, err := os.Create(outputFile)
-	if err != nil {
-		return
-	}
-	defer f.Close()
-
-	return tmpl.Execute(f, TemplateData{
-		PackageName: packageName,
-		Version:     version,
-		Local:       local,
-	})
+	return generated, err
 }

@@ -1,0 +1,12 @@
+{
+  "version": "6.9.420",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "module": "index.ts",
+  "name": "gover-js",
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "type": "module"
+}

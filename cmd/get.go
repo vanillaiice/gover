@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/urfave/cli/v2"
+	"github.com/vanillaiice/gover/v3/lang"
 	"github.com/vanillaiice/gover/v3/load"
 )
 
@@ -21,12 +22,13 @@ var getCmd = &cli.Command{
 		},
 	},
 	Action: func(ctx *cli.Context) error {
-		versionData, err := load.FromFile(ctx.Path("file"))
+		lang := lang.Lang(ctx.String("lang"))
+		version, err := load.FromFile(ctx.Path("file"), lang)
 		if err != nil {
 			return err
 		}
 
-		fmt.Printf("%s\n", versionData.Version)
+		fmt.Printf("%s\n", version)
 
 		return nil
 	},

@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/urfave/cli/v2"
+	"github.com/vanillaiice/gover/v3/lang"
 	"github.com/vanillaiice/gover/v3/load"
 )
 
@@ -52,12 +53,13 @@ var tagCmd = &cli.Command{
 		},
 	},
 	Action: func(ctx *cli.Context) (err error) {
-		versionData, err := load.FromFile(ctx.Path("file"))
+		l := lang.Lang(ctx.String("lang"))
+		version, err := load.FromFile(ctx.Path("file"), l)
 		if err != nil {
 			return
 		}
 
-		command, err := generateTagCommand(ctx.String("command"), versionData.Version)
+		command, err := generateTagCommand(ctx.String("command"), version)
 		if err != nil {
 			return
 		}

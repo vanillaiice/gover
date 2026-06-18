@@ -5,6 +5,7 @@ import (
 	"text/template"
 
 	"github.com/urfave/cli/v2"
+	"github.com/vanillaiice/gover/v3/lang"
 	"github.com/vanillaiice/gover/v3/load"
 )
 
@@ -54,12 +55,13 @@ var commitCmd = &cli.Command{
 		},
 	},
 	Action: func(ctx *cli.Context) (err error) {
-		versionData, err := load.FromFile(ctx.Path("file"))
+		l := lang.Lang(ctx.String("lang"))
+		version, err := load.FromFile(ctx.Path("file"), l)
 		if err != nil {
 			return err
 		}
 
-		command, err := generateCommitCommand(ctx.String("command"), ctx.Path("file"), versionData.Version)
+		command, err := generateCommitCommand(ctx.String("command"), ctx.Path("file"), version)
 		if err != nil {
 			return err
 		}

@@ -1,13 +1,13 @@
 # gover [![Go Reference](https://pkg.go.dev/badge/golang.org/x/example.svg)](https://pkg.go.dev/github.com/vanillaiice/gover) [![Go Report Card](https://goreportcard.com/badge/github.com/vanillaiice/gover)](https://goreportcard.com/report/github.com/vanillaiice/gover)
 
-gover is package version management tool for Go projects.
+gover is package version management tool for Go (and JS) projects.
 
 Instead of manually incrementing the version number in your code like a - 🗿,
 you can simply use `gover` to automatically do it.
 Also, you can use `gover` to commit changes to your go version file,
 and tag branches.
 
-Under the hood, `gover` will read a Go version file (e.g. `version.go`) in your project
+Under the hood, `gover` will read a version file (e.g. `version.go`, `package.json`) in your project
 and update the version number accordingly.
 
 # Installation
@@ -36,25 +36,27 @@ Then, you can use the `version` constant in your project:
 package cmd
 
 import (
-	"log"
-	"os"
+	"fmt"
+	"slices"
 
+	"github.com/joho/godotenv"
 	"github.com/urfave/cli/v2"
+	"github.com/vanillaiice/gover/v3/version"
 )
 
 // Exec starts the cli app.
 func Exec() {
 	app := &cli.App{
 		Name:                   "gover",
-		Usage:                  "package version management tool for Go",
-		Version:                version,
+		Usage:                  "package version management tool for Go and JS projects",
+		Version:                version.Version,
 ```
 
-> here, the `version.go` file is in the `cmd` directory.
+> here, the `version.go` file is in the `version` directory.
 
 ## `bump`
 
-You can increment the verison on the Go version file using the `bump` command:
+You can increment the package version using the `bump` command:
 
 ```sh
 # bump to major version (e.g. v1.0.0 -> v2.0.0)
@@ -63,6 +65,8 @@ $ gover bump --major
 $ gover -V bump --minor -f ver.go
 # bump to patch version (e.g. v1.0.0 -> v1.0.1) with custom package name
 $ gover bump --patch -P pkg
+# bump to patch version (e.g. v1.0.0 -> v1.0.1) with custom package name for js
+$ gover --lang js bump --patch
 ```
 
 ## `commit`
@@ -97,6 +101,7 @@ $ gover get -f cmd/ver.go
 
 > You can also set some arguments with environment variables:
 
+> - lang: GOVER_LANG
 > - version file: VERSION_FILE
 > - package name: PACKAGE_NAME
 > - commit command: COMMIT_COMMAND
@@ -108,13 +113,13 @@ $ gover get -f cmd/ver.go
 
 ```sh
 NAME:
-   gover - package version management tool for Go projects
+   gover - package version management tool for Go and JS projects
 
 USAGE:
    gover [global options] command [command options]
 
 VERSION:
-   v3.0.0
+   v3.4.0
 
 AUTHOR:
    vanillaiice <vanillaiice1@proton.me>
@@ -128,14 +133,11 @@ COMMANDS:
    help, h    Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
-   --verbose, -V  show verbose log (default: false)
-   --help, -h     show help
-   --version, -v  print the version
+   --verbose, -V         show verbose log (default: false)
+   --lang LANG, -l LANG  use language LANG (default: "go") [$GOVER_LANG]
+   --help, -h            show help
+   --version, -v         print the version
 ```
-
-# Related Projects
-
-- [gover-js](https://github.com/vanillaiice/gover-js), a package version management tool for JavaScript projects.
 
 # License
 

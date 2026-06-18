@@ -2,42 +2,48 @@ package load
 
 import (
 	"fmt"
-	"os"
-	"regexp"
+
+	"github.com/vanillaiice/gover/v3/lang"
+	load "github.com/vanillaiice/gover/v3/load/go"
+	loadJS "github.com/vanillaiice/gover/v3/load/js"
 )
 
-// VersionData is the version data.
-type VersionData struct {
-	Version string `json:"version"`
+// FromFile loads the version from the specified file.
+func FromFile(file string, l lang.Lang) (string, error) {
+	var (
+		version string
+		err     error
+	)
+
+	switch l {
+	case lang.Go:
+		version, err = load.FromFile(file)
+	case lang.JS, lang.TS:
+		version, err = loadJS.FromFile(file)
+	default:
+		return "", fmt.Errorf("invalid lang %q", l)
+	}
+
+	return version, err
 }
 
-// FromFile loads the version data from a go file.
-func FromFile(file string) (*VersionData, error) {
-	content, err := os.ReadFile(file)
-	if err != nil {
-		return nil, err
+// FromFilePanic is the same as FromFile but it panics on error.
+func FromFilePanic(file string, l lang.Lang) string {
+	var (
+		version string
+		err     error
+	)
+
+	switch l {
+	case lang.Go:
+		version, err = load.FromFile(file)
+	case lang.JS, lang.TS:
+		version, err = loadJS.FromFile(file)
 	}
 
-	re := regexp.MustCompile(`(version|Version)\s*=\s*"([^"]*)"`)
-	matches := re.FindStringSubmatch(string(content))
-	if len(matches) < 2 {
-		return nil, fmt.Errorf("could not find version in %s", file)
-	}
-
-	versionData := VersionData{
-		Version: matches[2],
-	}
-
-	return &versionData, nil
-}
-
-// FromFilePanic is the same as FromFile but panics on error.
-func FromFilePanic(file string) (vd *VersionData) {
-	var err error
-	vd, err = FromFile(file)
 	if err != nil {
 		panic(err)
 	}
 
-	return
+	return version
 }
