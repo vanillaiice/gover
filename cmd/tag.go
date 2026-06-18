@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"html/template"
+	"log"
 	"strings"
 
 	"github.com/urfave/cli/v2"
@@ -61,6 +62,10 @@ var tagCmd = &cli.Command{
 		command, err := generateTagCommand(ctx.String("command"), version)
 		if err != nil {
 			return
+		}
+
+		if ctx.Bool("verbose") {
+			log.Printf("running: %s", command)
 		}
 
 		if err = runCommand(command); err != nil {

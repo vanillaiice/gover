@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"log"
 	"strings"
 	"text/template"
 
@@ -72,6 +73,10 @@ var commitCmd = &cli.Command{
 		command, err := generateCommitCommand(ctx.String("command"), file, version)
 		if err != nil {
 			return err
+		}
+
+		if ctx.Bool("verbose") {
+			log.Printf("running: %s", command)
 		}
 
 		if err = runCommand(command); err != nil {
