@@ -102,7 +102,7 @@ var bumpCmd = &cli.Command{
 		case lang.JS, lang.TS:
 			genOpts = gen.Opts{
 				Version:    versionStr,
-				OutputFile: newVersion.String(),
+				OutputFile: file,
 			}
 		default:
 			return fmt.Errorf("bump command not supported for lang %q", l)
