@@ -101,7 +101,7 @@ var bumpCmd = &cli.Command{
 			}
 		case lang.JS, lang.TS:
 			genOpts = gen.Opts{
-				Version:    versionStr,
+				Version:    newVersion.String(),
 				OutputFile: file,
 			}
 		default:
