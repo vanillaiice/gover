@@ -41,15 +41,14 @@ var tagCmd = &cli.Command{
 			Name:    "file",
 			Aliases: []string{"f"},
 			Usage:   "load version from `FILE`",
-			Value:   "version/version.go",
-			EnvVars: []string{"VERSION_FILE"},
+			EnvVars: []string{"GOVER_VERSION_FILE"},
 		},
 		&cli.StringFlag{
 			Name:    "command",
 			Aliases: []string{"c"},
 			Usage:   "template for tag `COMMAND`",
 			Value:   "git tag {{ .Version }}",
-			EnvVars: []string{"TAG_COMMAND"},
+			EnvVars: []string{"GOVER_TAG_COMMAND"},
 		},
 	},
 	Action: func(ctx *cli.Context) (err error) {

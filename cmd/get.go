@@ -17,13 +17,21 @@ var getCmd = &cli.Command{
 			Name:    "file",
 			Aliases: []string{"f"},
 			Usage:   "load version from `FILE`",
-			Value:   "version/version.go",
-			EnvVars: []string{"VERSION_FILE"},
+			EnvVars: []string{"GOVER_VERSION_FILE"},
 		},
 	},
-	Action: func(ctx *cli.Context) error {
-		lang := lang.Lang(ctx.String("lang"))
-		version, err := load.FromFile(ctx.Path("file"), lang)
+	Action: func(ctx *cli.Context) (err error) {
+		l := lang.Lang(ctx.String("lang"))
+
+		file := ctx.Path("file")
+		if file == "" {
+			file, err = lang.DefaultVersionFilePath(l)
+			if err != nil {
+				return err
+			}
+		}
+
+		version, err := load.FromFile(file, l)
 		if err != nil {
 			return err
 		}

@@ -22,22 +22,21 @@ var bumpCmd = &cli.Command{
 			Name:    "file",
 			Aliases: []string{"f"},
 			Usage:   "load version from `FILE`",
-			Value:   "version/version.go",
-			EnvVars: []string{"VERSION_FILE"},
+			EnvVars: []string{"GOVER_VERSION_FILE"},
 		},
 		&cli.StringFlag{
 			Name:    "package",
 			Aliases: []string{"P"},
 			Usage:   "set package name to `PACKAGE`",
 			Value:   "version",
-			EnvVars: []string{"PACKAGE_NAME"},
+			EnvVars: []string{"GOVER_PACKAGE_NAME"},
 		},
 		&cli.BoolFlag{
 			Name:    "local",
 			Aliases: []string{"l"},
 			Usage:   "make the version constant local",
 			Value:   false,
-			EnvVars: []string{"LOCAL_VERSION"},
+			EnvVars: []string{"GOVER_LOCAL_VERSION"},
 		},
 		&cli.BoolFlag{
 			Name:    "major",
@@ -57,6 +56,15 @@ var bumpCmd = &cli.Command{
 	},
 	Action: func(ctx *cli.Context) (err error) {
 		l := lang.Lang(ctx.String("lang"))
+
+		file := ctx.Path("file")
+		if file == "" {
+			file, err = lang.DefaultVersionFilePath(l)
+			if err != nil {
+				return err
+			}
+		}
+
 		versionStr, err := load.FromFile(ctx.Path("file"), l)
 		if err != nil {
 			return

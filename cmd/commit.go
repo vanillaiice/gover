@@ -43,8 +43,7 @@ var commitCmd = &cli.Command{
 			Name:    "file",
 			Aliases: []string{"f"},
 			Usage:   "load version from `FILE`",
-			Value:   "version/version.go",
-			EnvVars: []string{"VERSION_FILE"},
+			EnvVars: []string{"GOVER_VERSION_FILE"},
 		},
 		&cli.StringFlag{
 			Name:    "command",
@@ -56,12 +55,21 @@ var commitCmd = &cli.Command{
 	},
 	Action: func(ctx *cli.Context) (err error) {
 		l := lang.Lang(ctx.String("lang"))
-		version, err := load.FromFile(ctx.Path("file"), l)
+
+		file := ctx.Path("file")
+		if file == "" {
+			file, err = lang.DefaultVersionFilePath(l)
+			if err != nil {
+				return err
+			}
+		}
+
+		version, err := load.FromFile(file, l)
 		if err != nil {
 			return err
 		}
 
-		command, err := generateCommitCommand(ctx.String("command"), ctx.Path("file"), version)
+		command, err := generateCommitCommand(ctx.String("command"), file, version)
 		if err != nil {
 			return err
 		}

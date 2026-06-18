@@ -21,3 +21,16 @@ func ParseLang(lang string) (Lang, error) {
 
 	return l, nil
 }
+
+func DefaultVersionFilePath(lang Lang) (file string, err error) {
+	switch lang {
+	case Go:
+		file = "version/version.go"
+	case JS, TS:
+		file = "package.json"
+	default:
+		err = fmt.Errorf("invalid lang %q", lang)
+	}
+
+	return
+}

@@ -23,22 +23,21 @@ var initCmd = &cli.Command{
 			Name:    "file",
 			Aliases: []string{"f"},
 			Usage:   "write version to `FILE`",
-			Value:   "version/version.go",
-			EnvVars: []string{"VERSION_FILE"},
+			EnvVars: []string{"GOVER_VERSION_FILE"},
 		},
 		&cli.StringFlag{
 			Name:    "package",
 			Aliases: []string{"P"},
 			Usage:   "set package name to `PACKAGE`",
 			Value:   "version",
-			EnvVars: []string{"PACKAGE_NAME"},
+			EnvVars: []string{"GOVER_PACKAGE_NAME"},
 		},
 		&cli.BoolFlag{
 			Name:    "local",
 			Aliases: []string{"l"},
 			Usage:   "make the version constant local (version instead of Version)",
 			Value:   false,
-			EnvVars: []string{"LOCAL_VERSION"},
+			EnvVars: []string{"GOVER_LOCAL_VERSION"},
 		},
 		&cli.BoolFlag{
 			Name:    "force",
@@ -59,18 +58,28 @@ var initCmd = &cli.Command{
 		}
 		return nil
 	},
-	Action: func(ctx *cli.Context) error {
-		if _, err := os.Stat(ctx.Path("file")); !errors.Is(err, os.ErrNotExist) {
+	Action: func(ctx *cli.Context) (err error) {
+		file := ctx.Path("file")
+
+		l := lang.Lang(ctx.String("lang"))
+		if file == "" {
+			file, err = lang.DefaultVersionFilePath(l)
+			if err != nil {
+				return err
+			}
+		}
+
+		if _, err := os.Stat(file); !errors.Is(err, os.ErrNotExist) {
 			if err == nil {
 				if !ctx.Bool("force") {
-					return fmt.Errorf("file %s already exists", ctx.Path("file"))
+					return fmt.Errorf("file %s already exists", file)
 				}
 			} else {
 				return err
 			}
 		}
 
-		path := filepath.Dir(ctx.Path("file"))
+		path := filepath.Dir(file)
 		if err := os.MkdirAll(path, os.ModePerm); err != nil {
 			return err
 		}
@@ -79,8 +88,6 @@ var initCmd = &cli.Command{
 		if err != nil {
 			return err
 		}
-
-		l := lang.Lang(ctx.String("lang"))
 
 		var genOpts gen.Opts
 		switch l {
@@ -100,12 +107,12 @@ var initCmd = &cli.Command{
 			return err
 		}
 
-		if err := os.WriteFile(ctx.Path("file"), out, 0644); err != nil {
+		if err := os.WriteFile(file, out, 0644); err != nil {
 			return err
 		}
 
 		if ctx.Bool("verbose") {
-			fmt.Printf("wrote version to %s & generated %s\n", ctx.Path("file"), ctx.Path("file"))
+			fmt.Printf("created %s with version %s\n", file, genOpts.Version)
 		}
 
 		return nil

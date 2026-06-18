@@ -18,14 +18,14 @@ func TestCmd(t *testing.T) {
 		os.Chdir(tempDir)
 		t.Cleanup(func() {
 			os.Chdir(currentDir)
-			os.Unsetenv("VERSION_FILE")
+			os.Unsetenv("GOVER_VERSION_FILE")
 		})
 
 		want := "my-custom-version-file.go"
 
 		if err := os.WriteFile(
 			filepath.Join(tempDir, ".gover"),
-			fmt.Appendf([]byte{}, "VERSION_FILE=%s", want),
+			fmt.Appendf([]byte{}, "GOVER_VERSION_FILE=%s", want),
 			0644,
 		); err != nil {
 			t.Fatal(err)
@@ -44,7 +44,7 @@ func TestCmd(t *testing.T) {
 			t.Error(err)
 		}
 
-		if got := os.Getenv("VERSION_FILE"); got != want {
+		if got := os.Getenv("GOVER_VERSION_FILE"); got != want {
 			t.Errorf("got %q want %q", got, want)
 		}
 	})
@@ -59,8 +59,8 @@ func TestCmd(t *testing.T) {
 		os.Chdir(tempDir)
 		t.Cleanup(func() {
 			os.Chdir(currentDir)
-			os.Unsetenv("VERSION_FILE")
-			os.Unsetenv("PACKAGE_NAME")
+			os.Unsetenv("GOVER_VERSION_FILE")
+			os.Unsetenv("GOVER_PACKAGE_NAME")
 		})
 
 		versionFile := "my-custom-version-file.go"
@@ -68,7 +68,7 @@ func TestCmd(t *testing.T) {
 
 		if err := os.WriteFile(
 			filepath.Join(tempDir, ".gover"),
-			fmt.Appendf([]byte{}, "VERSION_FILE=%s\nPACKAGE_NAME=%s", versionFile, packageName),
+			fmt.Appendf([]byte{}, "GOVER_VERSION_FILE=%s\nGOVER_PACKAGE_NAME=%s", versionFile, packageName),
 			0644,
 		); err != nil {
 			t.Fatal(err)
@@ -87,11 +87,11 @@ func TestCmd(t *testing.T) {
 			t.Error(err)
 		}
 
-		if got := os.Getenv("VERSION_FILE"); got != versionFile {
+		if got := os.Getenv("GOVER_VERSION_FILE"); got != versionFile {
 			t.Errorf("got %q want %q", got, versionFile)
 		}
 
-		if got := os.Getenv("PACKAGE_NAME"); got != packageName {
+		if got := os.Getenv("GOVER_PACKAGE_NAME"); got != packageName {
 			t.Errorf("got %q want %q", got, packageName)
 		}
 	})
