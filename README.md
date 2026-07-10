@@ -223,20 +223,20 @@ USAGE:
    gover [global options] command [command options]
 
 VERSION:
-   v3.4.0
+   v3.5.0
 
 AUTHOR:
    vanillaiice <vanillaiice1@proton.me>
 
 COMMANDS:
-   init, i    initialize a new version file
-   bump, b    bump version
-   release, r bump, commit, and tag a release
-   commit, c  commit version
-   tag, t     tag branch with the current version
-   get, e     get the current version
-   check, k   validate version files
-   help, h    Shows a list of commands or help for one command
+   init, i     initialize a new version file
+   bump, b     bump version
+   release, r  bump, commit, and tag a release
+   commit, c   commit version
+   tag, t      tag branch with the current version
+   get, e      get the current version
+   check, k    validate version files
+   help, h     Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
    --verbose, -V         show verbose log (default: false)
