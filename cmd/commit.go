@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"log"
 	"strings"
 	"text/template"
@@ -13,7 +14,16 @@ import (
 // commitCmdTemplateData is the template data for the commit command.
 type commitCmdTemplateData struct {
 	File    string
+	Files   []string
 	Version string
+}
+
+type commandResult struct {
+	File    string    `json:"file,omitempty"`
+	Lang    lang.Lang `json:"lang"`
+	Version string    `json:"version"`
+	Command string    `json:"command"`
+	DryRun  bool      `json:"dry_run"`
 }
 
 // generateCommitCommand generates the commit command from the template.
@@ -26,6 +36,7 @@ func generateCommitCommand(tmpl, file, version string) (string, error) {
 	var b strings.Builder
 	if err = template.Execute(&b, commitCmdTemplateData{
 		File:    file,
+		Files:   []string{file},
 		Version: version,
 	}); err != nil {
 		return "", err
@@ -53,6 +64,14 @@ var commitCmd = &cli.Command{
 			Value:   "git commit {{ .File }} -m \"chore: bump version to {{ .Version }}\"",
 			EnvVars: []string{"COMMIT_COMMAND"},
 		},
+		&cli.BoolFlag{
+			Name:  "dry-run",
+			Usage: "show the commit command without running it",
+		},
+		&cli.BoolFlag{
+			Name:  "json",
+			Usage: "print machine-readable JSON output",
+		},
 	},
 	Action: func(ctx *cli.Context) (err error) {
 		l := lang.Lang(ctx.String("lang"))
@@ -79,8 +98,27 @@ var commitCmd = &cli.Command{
 			log.Printf("running: %s", command)
 		}
 
+		result := commandResult{
+			File:    file,
+			Lang:    l,
+			Version: version,
+			Command: command,
+			DryRun:  ctx.Bool("dry-run"),
+		}
+		if ctx.Bool("dry-run") {
+			if ctx.Bool("json") {
+				return printJSON(result)
+			}
+			fmt.Println(command)
+			return nil
+		}
+
 		if err = runCommand(command); err != nil {
 			return err
+		}
+
+		if ctx.Bool("json") {
+			return printJSON(result)
 		}
 
 		return nil

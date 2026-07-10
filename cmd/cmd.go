@@ -11,9 +11,11 @@ import (
 
 // Exec starts the cli app.
 func Exec(arguments []string) error {
+	explicitCommandFlags = collectExplicitCommandFlags(arguments)
+
 	app := &cli.App{
 		Name:                   "gover",
-		Usage:                  "package version management tool for Go and JS projects",
+		Usage:                  "package version management tool for Go, JS/TS, Rust, and PHP projects",
 		Version:                version.Version,
 		Suggest:                true,
 		UseShortOptionHandling: true,
@@ -22,9 +24,11 @@ func Exec(arguments []string) error {
 		Commands: []*cli.Command{
 			initCmd,
 			bumpCmd,
+			releaseCmd,
 			commitCmd,
 			tagCmd,
 			getCmd,
+			checkCmd,
 		},
 		Flags: []cli.Flag{
 			&cli.BoolFlag{
@@ -42,7 +46,7 @@ func Exec(arguments []string) error {
 			},
 		},
 		Before: func(ctx *cli.Context) error {
-			if lang := ctx.String("lang"); !slices.Contains([]string{"go", "js", "ts"}, lang) {
+			if lang := ctx.String("lang"); !slices.Contains([]string{"go", "js", "ts", "rust", "php"}, lang) {
 				return fmt.Errorf("unsupported lang %q", lang)
 			}
 			return nil

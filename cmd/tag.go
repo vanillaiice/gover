@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"strings"
@@ -51,10 +52,27 @@ var tagCmd = &cli.Command{
 			Value:   "git tag {{ .Version }}",
 			EnvVars: []string{"GOVER_TAG_COMMAND"},
 		},
+		&cli.BoolFlag{
+			Name:  "dry-run",
+			Usage: "show the tag command without running it",
+		},
+		&cli.BoolFlag{
+			Name:  "json",
+			Usage: "print machine-readable JSON output",
+		},
 	},
 	Action: func(ctx *cli.Context) (err error) {
 		l := lang.Lang(ctx.String("lang"))
-		version, err := load.FromFile(ctx.Path("file"), l)
+
+		file := ctx.Path("file")
+		if file == "" {
+			file, err = lang.DefaultVersionFilePath(l)
+			if err != nil {
+				return err
+			}
+		}
+
+		version, err := load.FromFile(file, l)
 		if err != nil {
 			return
 		}
@@ -68,8 +86,27 @@ var tagCmd = &cli.Command{
 			log.Printf("running: %s", command)
 		}
 
+		result := commandResult{
+			File:    file,
+			Lang:    l,
+			Version: version,
+			Command: command,
+			DryRun:  ctx.Bool("dry-run"),
+		}
+		if ctx.Bool("dry-run") {
+			if ctx.Bool("json") {
+				return printJSON(result)
+			}
+			fmt.Println(command)
+			return nil
+		}
+
 		if err = runCommand(command); err != nil {
 			return
+		}
+
+		if ctx.Bool("json") {
+			return printJSON(result)
 		}
 
 		return nil

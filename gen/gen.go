@@ -5,6 +5,8 @@ import (
 
 	gen "github.com/vanillaiice/gover/v3/gen/go"
 	genJS "github.com/vanillaiice/gover/v3/gen/js"
+	genPHP "github.com/vanillaiice/gover/v3/gen/php"
+	genRust "github.com/vanillaiice/gover/v3/gen/rust"
 	"github.com/vanillaiice/gover/v3/lang"
 )
 
@@ -31,6 +33,16 @@ func Version(l lang.Lang, opts *Opts) ([]byte, error) {
 		)
 	case lang.JS, lang.TS:
 		generated, err = genJS.UpdatePackageVersion(
+			opts.OutputFile,
+			opts.Version,
+		)
+	case lang.Rust:
+		generated, err = genRust.UpdateCargoVersion(
+			opts.OutputFile,
+			opts.Version,
+		)
+	case lang.PHP:
+		generated, err = genPHP.UpdateComposerVersion(
 			opts.OutputFile,
 			opts.Version,
 		)

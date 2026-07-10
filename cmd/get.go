@@ -8,6 +8,12 @@ import (
 	"github.com/vanillaiice/gover/v3/load"
 )
 
+type getResult struct {
+	File    string    `json:"file"`
+	Lang    lang.Lang `json:"lang"`
+	Version string    `json:"version"`
+}
+
 var getCmd = &cli.Command{
 	Name:    "get",
 	Aliases: []string{"e"},
@@ -18,6 +24,10 @@ var getCmd = &cli.Command{
 			Aliases: []string{"f"},
 			Usage:   "load version from `FILE`",
 			EnvVars: []string{"GOVER_VERSION_FILE"},
+		},
+		&cli.BoolFlag{
+			Name:  "json",
+			Usage: "print machine-readable JSON output",
 		},
 	},
 	Action: func(ctx *cli.Context) (err error) {
@@ -34,6 +44,14 @@ var getCmd = &cli.Command{
 		version, err := load.FromFile(file, l)
 		if err != nil {
 			return err
+		}
+
+		if ctx.Bool("json") {
+			return printJSON(getResult{
+				File:    file,
+				Lang:    l,
+				Version: version,
+			})
 		}
 
 		fmt.Printf("%s\n", version)
